@@ -20,7 +20,7 @@ class SandboxGrader < Grader
     end
   end
 
-  protected
+  #protected
 
   def do_grading(assignment, sub)
     puts "== do grading? =="
@@ -68,11 +68,21 @@ class SandboxGrader < Grader
 
     cont.start!
 
-    Audit.log("#{prefix}: Starting sandbox grader with secret #{secret}\n");
+    Audit.log("#{prefix}: Starting sandbox grader with secret #{secret}");
     stdout, stderr, rv = cont.exec_driver(secret, sub.upload, self.upload, self.extra_upload)
     if rv != 0
       raise Exception.new("Driver execution failed")
     end
+
+    utf8fix = {invalid: :replace, undef: :replace, replace: ''}
+    stdout = stdout.encode(Encoding.find('UTF-8'), utf8fix)
+    stderr = stderr.encode(Encoding.find('UTF-8'), utf8fix)
+
+    puts "== stdout =="
+    puts stdout
+    puts "== stderr =="
+    puts stderr
+    puts "== end of output =="
 
     parts = stdout.split("#{secret}\n")
     g.score = 0
@@ -80,7 +90,7 @@ class SandboxGrader < Grader
 
     details_log = grader_dir.join("details.log")
     makefile_tap = grader_dir.join("makefile.tap")
-
+      
     File.open(details_log, "w") do |details|
       details.write "== stdout ==\n\n#{stdout}\n\n== stderr ==\n\n#{stderr}\n\n== end of output ==\n"
     end
@@ -88,7 +98,7 @@ class SandboxGrader < Grader
     if parts.size >= 3
       begin
         tap = TapParser.new(parts[1])
-        Audit.log "#{prefix}: Sandbox grader results: Tap: #{tap.points_earned}\n"
+        Audit.log "#{prefix}: Sandbox grader results: Tap: #{tap.points_earned}"
         puts "Got TAP output"
 
         File.open(makefile_tap, "w") do |makefile|
@@ -99,14 +109,14 @@ class SandboxGrader < Grader
         g.out_of = tap.points_available
         g.grading_output = makefile_tap.to_s
       rescue Exception => e
-        Audit.log "#{prefix}: Could not parse Tap results; see #{details_log}\n"
+        Audit.log "#{prefix}: Could not parse Tap results; see #{details_log}"
         puts "TAP parse error, see audit log"
         g.score = 0
         g.out_of = self.avail_score
         g.grading_output = details_log.to_s
       end
     else
-      Audit.log "#{prefix}: Sandbox grader failed: did not find at least three parts of output (expected secret #{secret}); see #{details_log}\n"
+      Audit.log "#{prefix}: Sandbox grader failed: did not find at least three parts of output (expected secret #{secret}); see #{details_log}"
       puts "Bad output no cookie, see audit log"
       g.score = 0
       g.out_of = self.avail_score
@@ -127,7 +137,7 @@ class SandboxGrader < Grader
       Audit.log "==========="
     else
       tap = TapParser.new(parts[1])
-      Audit.log "Assignment #{assignment.id}, submission #{sub.id} sandbox grader results: Tap: #{tap.points_earned}\n"
+      Audit.log "Assignment #{assignment.id}, submission #{sub.id} sandbox grader results: Tap: #{tap.points_earned}"
 
       g.score = tap.points_earned
       if tap.points_available >= 1.0
