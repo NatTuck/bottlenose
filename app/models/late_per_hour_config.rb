@@ -37,10 +37,10 @@ class LatePerHourConfig < LatenessConfig
   #private
 
   def hours_late(assignment, submission, raw = false)
-    return 0 unless raw or late?(assignment, submission)
+    #return 0 unless raw or late?(assignment, submission)
     due_on = assignment.effective_due_date(submission.user, submission.team)
     sub_on = submission.created_at || DateTime.current
     late_hours = (sub_on.to_time - due_on.to_time) / 1.hour.seconds
-    late_hours.ceil
+    [0, late_hours.ceil].max
   end
 end

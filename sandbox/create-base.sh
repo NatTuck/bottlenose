@@ -4,7 +4,8 @@ NAME=bn-base
 
 lxc image delete $NAME
 lxc delete $NAME
-lxc launch ubuntu:16.04 $NAME
+lxc profile device add default root disk path=/ pool=default
+lxc launch ubuntu:18.04 $NAME
 
 echo "Waiting for container to boot..."
 while [[ ! `lxc exec "$NAME" -- runlevel` =~ ^N ]]; do
@@ -24,19 +25,18 @@ export DEBIAN_FRONTEND=noninteractive
 wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
 dpkg -i erlang-solutions_1.0_all.deb
 
-curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+#curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
 
 apt-get update
 apt-get upgrade -y
 
 apt-get install -y ruby python3
-apt-get install -y libarchive-zip-perl libipc-system-perl
-apt-get install -y clang valgrind build-essential
-apt-get install -y openjdk-8-jdk
+apt-get install -y libarchive-zip-perl libautodie-perl
+apt-get install -y clang clang-tools valgrind build-essential
+#apt-get install -y openjdk-8-jdk
 apt-get install -y libfuse-dev pkg-config
 apt-get install -y wamerican libbsd-dev libgmp-dev
 apt-get install -y esl-erlang elixir nodejs
-
 
 #apt-get install -y ocaml ocaml-native-compilers camlp4-extra opam \
 #        nasm m4 gcc-multilib g++-multilib libc6-dev-i386 libc6-dev \
