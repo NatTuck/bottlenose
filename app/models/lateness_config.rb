@@ -23,11 +23,11 @@ class LatenessConfig < ApplicationRecord
   end
 
   def days_late(assignment, submission, raw = false)
-    return 0 unless raw or late?(assignment, submission)
+    #return 0 unless raw or late?(assignment, submission)
     due_on = assignment.effective_due_date(submission.user, submission.team)
     sub_on = submission.created_at || DateTime.current
     late_days = ((sub_on.to_f - due_on.to_f) / 1.day.seconds)
-    late_days.ceil
+    [0, late_days.ceil].max
   end
 
   def hours_late(assignment, submission, raw = false)

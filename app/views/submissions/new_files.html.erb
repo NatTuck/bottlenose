@@ -73,12 +73,17 @@
 <script>
   var deadline = moment(Date.parse("<%= @assignment.effective_due_date(current_user, @team).strftime("%Y/%m/%d %H:%M") %>")).valueOf();
   var now = moment().valueOf();
-  setTimeout(function() {
+  var when = Math.max(deadline - now, 0);
+  function show_warning() {
+    console.log("late warning triggered");
     var warning = $("#late-warning");
     warning.addClass("alert alert-danger");
     warning.find("p").removeClass("hidden");
     warning.find("h3").removeClass("hidden");
-  }, Math.max(deadline - now, 0));
+  }
+  if (when < (1000 * 60 * 60 * 24 * 7)) {
+    setTimeout(show_warning, when);
+  }
   var archiveExtensions = <%= raw json_escape(JSON.generate(ArchiveUtils.ARCHIVE_EXTENSIONS)) %>;
   $("#submission_upload_file").change(function(e) {
     var filename = $(this).val();
