@@ -5,6 +5,8 @@
 //= require bootstrap-toggle
 //= require pdfjs-dist/web/pdf_viewer
 
+.cm-s-mdn-like.CodeMirror { color: #000; background-color: #fff; }
+
 // Import the bootstrap overrides *before* bootstrap.
 @import "bootstrap-overrides";
 

@@ -41,6 +41,8 @@
 //= require pyret-codemirror-mode/mode/pyret
 //= require_tree .
 
+CodeMirror.defineMIME('text/x-gas', 'gas64');
+
 // Based on https://stackoverflow.com/questions/14324919/status-of-rails-link-to-function-deprecation
 function enableReflectiveCalls() {
   $('[data-on][data-call][data-args]').each(function(d){

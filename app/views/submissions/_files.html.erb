@@ -79,6 +79,7 @@ div.pdfPages > div.pageContainer > div.regionComments > div.page {
 }
 </style>
 <% sub_files.each_with_index do |f, i| %>
+  <!-- type: <%= f[:type] %> -->
 <% index = (i + 1).to_s.rjust(sub_files.count.to_s.length, '0') %>
 <div class="file-pane tab-pane panel-tab-pane <%= if i == 0; 'active' end %>" id="file_<%= index %>_<%= root %>">
   <% if (f[:type].starts_with?("image")) %>
@@ -99,7 +100,7 @@ div.pdfPages > div.pageContainer > div.regionComments > div.page {
   <ul class="nav nav-tabs">
     <li class="active"><a href="#markup_src_<%= i %>_<%= root %>" data-toggle="tab">Markdown source</a></li>
     <li id="tab_markdown_<%= i %>_<%= root %>"><a href="#markup_markdown_<%= i %>_<%= root %>" data-toggle="tab">Markdown preview<sup>β</sup> (links, scripts disabled)</a></li>
-    <li><%= link_to "Download #{File.basename(f[:name])}", f[:link] %></li>
+    <li><%= link_to "Download Markdown #{File.basename(f[:name])}", f[:link] %></li>
   </ul>
   <div class="tab-content" style="height: 100%;">
     <div id="markup_src_<%= i %>_<%= root %>" class="tab-pane nested active">
@@ -127,7 +128,7 @@ div.pdfPages > div.pageContainer > div.regionComments > div.page {
   <ul class="nav nav-tabs">
     <li class="active"><a href="#markup_src_<%= i %>_<%= root %>" data-toggle="tab"><%= type %> source</a></li>
     <li id="tab_image_<%= i %>_<%= root %>"><a href="#markup_image_<%= i %>_<%= root %>" data-toggle="tab"><%= type %> preview (scripts disabled)</a></li>
-    <li><%= link_to "Download #{File.basename(f[:name])}", f[:link] %></li>
+    <li><%= link_to "Download XML #{File.basename(f[:name])}", f[:link] %></li>
   </ul>
   <div class="tab-content" style="height: 100%;">
     <div id="markup_src_<%= i %>_<%= root %>" class="tab-pane nested active">
@@ -169,7 +170,7 @@ div.pdfPages > div.pageContainer > div.regionComments > div.page {
     <div class="warningContent">
     <p>Could not render <%= f[:name] %></p>
     <p><%= link_to "Download #{f[:name]}", f[:link] %></p>
-    <p><%= err %></p>
+    <p>Exception: <%= err %></p>
     </div>
   </div>
   <% end %>
@@ -179,15 +180,15 @@ div.pdfPages > div.pageContainer > div.regionComments > div.page {
       <source src="<%= f[:link] %>" type="audio/mpeg">
       <div class="warningContent">
         <p>Could not render <%= f[:name] %></p>
-        <p><%= link_to "Download #{f[:name]}", f[:link] %></p>
+        <p><%= link_to "Download audio #{f[:name]}", f[:link] %></p>
       </div>        
     </audio>
-    <p><%= link_to "Download #{f[:name]}", f[:link] %></p>
+    <p><%= link_to "Download audio #{f[:name]}", f[:link] %></p>
   </div>
   <% elsif ApplicationHelper::binary?(f[:type]) %>
   <div class="nonCMwrapper flexV">
     <div class="warningContent" data-source="<%= f[:link] %>">
-    <%= link_to "Download #{f[:name]}", f[:link] %>
+    <%= link_to "Download binary #{f[:name]}", f[:link] %>
     </div>
   </div>
   <% elsif f[:type] == "symlink" %>

@@ -208,6 +208,10 @@ module ApplicationHelper
       "text/x-c++src"
     when ".cs"
       "text/x-csharp"
+    when ".s"
+      "text/x-gas"
+    when ".S"
+      "text/x-gas"
     when ".gif"
       "image/gif"
     when ".jpg", ".jpeg"
@@ -265,6 +269,7 @@ module ApplicationHelper
          "text/html",
          "text/css",
          "text/plain",
+         "text/x-gas",
          "text/x-makefile"
       false
     when "application/java-vm",
