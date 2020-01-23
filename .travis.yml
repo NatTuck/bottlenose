@@ -1,11 +1,12 @@
-dist: xenial
+dist: bionic
 services:
   - postgresql
 addons:
-  postgresql: '9.6'
+  postgresql: '10.10'
   apt:
     packages:
       - libqtwebkit-dev
+      - xvfb
 sudo: true
 language:
     - ruby
