@@ -40,9 +40,15 @@
     <% end %>
   </div>
 </div>
+
 <div class="row">
+  <div class="col-sm-6">
+    Your secret: <%= cur_reg&.secret %>
+  </div>
+  <div class="col-sm-6">
   <%= link_to "Withdraw from this course", withdraw_course_path(@course),
       method: :delete,
       class: "pull-right btn btn-danger",
       data: {confirm: "Are you absolutely sure you want to withdraw from this course?"} %>
+  </div>
 </div>

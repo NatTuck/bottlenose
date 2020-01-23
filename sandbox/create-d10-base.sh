@@ -1,11 +1,11 @@
 #!/bin/bash
 
-NAME=bn-base
+NAME=bn-d10
 
 lxc image delete $NAME
 lxc delete $NAME
 lxc profile device add default root disk path=/ pool=default
-lxc launch ubuntu:18.04 $NAME
+lxc launch images:debian/buster $NAME
 
 echo "Waiting for container to boot..."
 while [[ ! `lxc exec "$NAME" -- runlevel` =~ ^N ]]; do
@@ -22,6 +22,8 @@ echo "" > /etc/apt/apt.conf.d/20auto-upgrades
 
 export DEBIAN_FRONTEND=noninteractive
 
+apt install -y wget gnupg2
+
 wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
 dpkg -i erlang-solutions_1.0_all.deb
 
@@ -30,11 +32,12 @@ dpkg -i erlang-solutions_1.0_all.deb
 apt-get update
 apt-get upgrade -y
 
-apt-get install -y ruby python3
+apt-get install -y ruby python3 time
 apt-get install -y libarchive-zip-perl libautodie-perl libclone-perl
+apt-get install -y libipc-system-simple-perl
 apt-get install -y clang clang-tools valgrind build-essential
 #apt-get install -y openjdk-8-jdk
-apt-get install -y libfuse-dev pkg-config
+apt-get install -y fuse libfuse-dev pkg-config
 apt-get install -y wamerican libbsd-dev libgmp-dev
 apt-get install -y esl-erlang elixir nodejs
 
@@ -47,6 +50,9 @@ apt-get install -y esl-erlang elixir nodejs
 #su ubuntu -c "cd ~student ; opam install -y ounit extlib ocamlfind"
 
 apt-get upgrade -y
+
+adduser --disabled-password --gecos "Debian User,,," debian
+adduser --disabled-password --gecos "Student,,," ubuntu
 
 END
 

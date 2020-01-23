@@ -268,7 +268,12 @@ class AssignmentsController < ApplicationController
       end
       ungraded.each do |g| g.grader.grade(@assignment, u) end
       u.grades.update_all(:available => true)
-      u.compute_grade!
+      begin
+        u.compute_grade!
+      rescue NoMethodError => e
+        puts "no method error:"
+        puts e.inspect
+      end
       count += 1
     end
 

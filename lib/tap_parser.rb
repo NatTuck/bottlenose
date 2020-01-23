@@ -57,7 +57,7 @@ class TapParser
   end
 
   def parse_commentary
-    while @lines.length > 0 && @lines[0].match(/^# /)
+    while @lines.length > 0 && @lines[0].match(/^#/)
       line = next_line[2..-1]
       @commentary.push(line)
       mm = line.match(/^Time: (.*)$/)

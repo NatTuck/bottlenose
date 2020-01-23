@@ -297,6 +297,7 @@ class Submission < ApplicationRecord
     log = ""
     self.grades.includes(:grader).each do |g|
       return if g.score.nil?
+      return if g.grader.avail_score.nil?
       component_weight = g.grader.avail_score.to_f
       if (g.out_of.to_f == 0.0)
         grade_component = 0.0
@@ -371,9 +372,12 @@ class Submission < ApplicationRecord
     def with_extracted(item)
       return nil if item.nil?
       if item[:public_link]
+        # FIXME: scrub here is wrong
+        item[:public_link] = item[:public_link].scrub('-')
         return nil if File.basename(item[:full_path].to_s) == ".DS_Store"
         comments = @lineCommentsByFile[item[:public_link].to_s] || {noCommentsFor: item[:public_link].to_s}
         mimetype = ApplicationHelper.mime_type(item[:full_path])
+
         @submission_files.push({
           link: item[:public_link],
           name: item[:public_link].sub(/^.*extracted\//, ""),

@@ -71,6 +71,10 @@ class Registration < ApplicationRecord
   # Only one registration per user per course is allowed.
   validates :user_id, uniqueness: { scope: :course_id }
 
+  def secret
+    Digest::SHA256.hexdigest("#{self.course.name} #{self.id}")[0..32]
+  end
+
   # Return true if the registration is a staff role (not a student)
   def staff?
     (self.role == 'professor' || self.role == 'assistant' || self.role == 'grader') && self.dropped_date.nil?

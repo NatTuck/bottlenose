@@ -9,7 +9,7 @@ class Container
 
   def start!
     run(
-      %Q{lxc launch bn-base "#{@name}" -e \
+      %Q{lxc launch bn-d10 "#{@name}" -e \
            -c "limits.cpu.allowance=20ms/60ms" \
            -c "limits.memory=512MB" \
            -c "limits.processes=128"}

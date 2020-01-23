@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+course = Course.find(9)
+
+puts "Course: #{course.name} #{course.term.name}"
+
+asgn = Assignment.find(101)
+teams = asgn.teamset.active_teams
+
+teams.each do |team|
+  puts %Q{make_team.(#{team.id}, "#{team.member_names}")}
+end
+
+regs = course.active_registrations
+
+regs.each do |reg|
+  user = reg.user
+  team = asgn.teamset.active_team_for(user)
+  if team
+    puts %Q{make_user.("#{user.username}", "#{reg.secret}", #{team.id})}
+  else
+    raise "User #{user.name} has no team"
+  end
+end
+
+

@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+course = Course.find(6)
+tset = Teamset.find(90)
+asgn = Assignment.find(78)
+
+course.students.each do |user|
+  teams = tset.teams.find_all {|team| team.end_date.nil? && team.users.include?(user) }
+  if teams.count != 1
+    p user.name
+    p teams.inspect
+  end
+  #if teams.count > 1
+  #  teams.drop(1).each do |team|
+  #    team.dissolve(Time.now - 1.day)
+  #  end
+  #end
+end
+

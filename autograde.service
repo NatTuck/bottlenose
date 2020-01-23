@@ -1,0 +1,16 @@
+[Unit]
+Description=Bottlenose Autograder
+
+[Service]
+Type=simple
+User=bottlenose
+Group=bottlenose
+Restart=on-failure
+Environment=RAILS_ENV=production
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/bottlenose/bottlenose
+ExecStart=/bin/bash /home/bottlenose/bottlenose/autograde.sh
+
+[Install]
+WantedBy=multi-user.target
